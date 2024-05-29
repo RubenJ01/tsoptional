@@ -1,10 +1,12 @@
 {
-  "name": "tsoptional",
-  "version": "1.0.0",
+  "name": "@rubenj01/tsoptional",
+  "version": "1.0.2",
   "description": "A container object that helps dealing with null values.",
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
