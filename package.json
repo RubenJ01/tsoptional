@@ -1,0 +1,23 @@
+{
+  "name": "tsoptional",
+  "version": "1.0.0",
+  "description": "A container object that helps dealing with null values.",
+  "main": "index.ts",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RubenJ01/tsoptional.git"
+  },
+  "keywords": [
+    "optional",
+    "typescript"
+  ],
+  "author": "Ruben Eekhof",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RubenJ01/tsoptional/issues"
+  },
+  "homepage": "https://github.com/RubenJ01/tsoptional#readme"
+}
