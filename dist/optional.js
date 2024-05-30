@@ -1,64 +1,71 @@
-import NoSuchElementError from './noSuchElementError';
 /**
  * Container object which may or may not contain a non-null value.
  */
 export default class Optional {
-    constructor(data) {
-        this.value = data;
-    }
     /**
      * Create an optional with a value of type T.
      * @param data The value that will be saved inside the Optional.
      * @returns An Optional with the specified non-null value.
+     * @throws Error when value is null or undefined.
      */
-    static of(data) {
-        return new Optional(data);
+    static of(value) {
+        if (value == null || value == undefined) {
+            throw new TypeError("Value can't be null or undefined");
+        }
+        return new PresentOptional(value);
+    }
+    /**
+     * Create an optional with a value of type T. If the value is null it creates an empty Optional instead.
+     * @param data The value that will be saved inside the Optional.
+     * @returns An Optional with the specified value, or an empty Optional if the value is null.
+     */
+    static ofNullable(value) {
+        if (value == null || value == undefined) {
+            return new EmptyOptional();
+        }
+        return new PresentOptional(value);
     }
     /**
      * Create an Optional thats empty.
      * @returns An empty Optional instance;
      */
     static empty() {
-        return new Optional(null);
+        return new EmptyOptional();
     }
-    /***
-     * Retrieve the value stored inside of the Optional.
-     * @returns If a value is present in this Optional, returns the value, otherwise throws exception.
-     * @throws NoSuchElementException when this function is called on an empty Optional.
-     */
+}
+class EmptyOptional extends Optional {
+    constructor() {
+        super();
+    }
     get() {
-        if (this.value == null) {
-            throw new NoSuchElementError("Optional contains a null value");
-        }
+        throw new Error("Optional is empty");
+    }
+    ifPresentOrElse(action, emptyAction) {
+        emptyAction();
+    }
+    ifPresent(action) {
+        return;
+    }
+    isPresent() {
+        return false;
+    }
+}
+class PresentOptional extends Optional {
+    constructor(value) {
+        super();
+        this.value = value;
+    }
+    get() {
         return this.value;
     }
-    /**
-     * Execute the given action if a value is present, emptyAction if otherwise.
-     * @param Consumer Code to be executed if the value is present.
-     * @param Runnable Code to be excuted if the value is not present.
-     */
     ifPresentOrElse(action, emptyAction) {
-        if (this.isPresent()) {
-            action(this.value);
-        }
-        else {
-            emptyAction();
-        }
+        action(this.value);
     }
-    /**
-     * Execute the given action if a value is present.
-     * @param Consumer Code to be executed if the value is present.
-     */
     ifPresent(action) {
-        if (this.isPresent()) {
-            action(this.value);
-        }
+        action(this.value);
     }
-    /**
-     * @returns True if there is a value present, otherwise false.
-     */
     isPresent() {
-        return this.value !== null;
+        return true;
     }
 }
 //# sourceMappingURL=optional.js.map
