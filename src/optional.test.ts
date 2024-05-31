@@ -150,4 +150,16 @@ describe("Optional", () => {
             expect(sut.orElseGet(() => testValue)).toBe(testValue);
         });
     });
+
+    describe("orElseThrow", () => {
+        it("should return the value if its present", () => {
+            let sut = Optional.of(testValue);
+            expect(sut.orElseThrow(() => {throw new Error()})).toBe(testValue);
+        });
+
+        it("should throw an errror if no value is present", () => {
+            let sut = Optional.empty();
+            expect(() => {sut.orElseThrow(() => {return new Error();})}).toThrow(Error);
+        });
+    });
 });

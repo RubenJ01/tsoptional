@@ -72,9 +72,18 @@ export default abstract class Optional<T> {
     /**
      * Returns the value if its present, otherwise calls other and returns the result of that function call.
      * @param other The supplier to call if no value is present.
-     * @returns Value or result of supplier.
+     * @returns The present value or result of supplier.
      */
     abstract orElseGet(other: Supplier<T>) : T;
+
+
+    /**
+     * Returns the value if its present, otherwise throws the error provided by the supplier.
+     * @param errSupplier The supplier to call if no value is present.
+     * @returns The present value.
+     * @throws Error provided by the supplier.
+     */
+    abstract orElseThrow(errSupplier: Supplier<T>) : T;
 
     /**
      * Checks if the Optional is not empty.
@@ -124,6 +133,10 @@ class EmptyOptional<T> extends Optional<T> {
         return other();
     }
 
+    orElseThrow(errSupplier: Supplier<T>): T {
+        throw errSupplier();
+    }
+
     isPresent(): boolean {
         return false;
     }
@@ -163,6 +176,10 @@ class PresentOptional<T> extends Optional<T> {
     }
 
     orElseGet(other: Supplier<T>): T {
+        return this.value;
+    }
+
+    orElseThrow(errSupplier: Supplier<T>): T {
         return this.value;
     }
 
