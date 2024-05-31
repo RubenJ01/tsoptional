@@ -55,7 +55,7 @@ describe("Optional", () => {
 
         it("should throw an error if the Optional is empty", () => {
             const sut = Optional.empty();
-            expect(() => {sut.get()}).toThrow();
+            expect(() => { sut.get() }).toThrow();
         });
     });
 
@@ -124,6 +124,18 @@ describe("Optional", () => {
             expect(sut.equals(Optional.of(5))).toBe(false);
             sut = Optional.of("5");
             expect(sut.equals(Optional.of(5))).toBe(false);
+        });
+    });
+
+    describe("orElse", () => {
+        it("should return the value if its present", () => {
+            let sut = Optional.of(testValue);
+            expect(sut.orElse("other")).toBe(testValue);
+        });
+
+        it("should return other if no value is present", () => {
+            let sut = Optional.empty();
+            expect(sut.orElse(testValue)).toBe(testValue);
         });
     });
 });

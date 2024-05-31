@@ -61,6 +61,13 @@ export default abstract class Optional<T> {
     abstract ifPresent(action: Consumer<T>): void;
 
     /**
+     * Returns the value if its present, otherwise other.
+     * @param other The value to return if no value is present.
+     * @returns Value or other.
+     */
+    abstract orElse(other: T): T;
+
+    /**
      * Checks if the Optional is not empty.
      * @returns True if there is a value present, otherwise false.
      */
@@ -83,7 +90,7 @@ export default abstract class Optional<T> {
 }
 
 class EmptyOptional<T> extends Optional<T> {
-
+    
     constructor() {
         super();
     }
@@ -98,6 +105,10 @@ class EmptyOptional<T> extends Optional<T> {
 
     ifPresent(action: Consumer<T>): void {
         return;
+    }
+
+    orElse(other: T): T {
+        return other;
     }
 
     isPresent(): boolean {
@@ -132,6 +143,10 @@ class PresentOptional<T> extends Optional<T> {
 
     ifPresent(action: Consumer<T>): void {
         action(this.value);
+    }
+
+    orElse(other: T): T {
+        return this.value;
     }
 
     isPresent(): boolean {
