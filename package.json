@@ -1,6 +1,6 @@
 {
   "name": "@rubenj01/tsoptional",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A container object that helps dealing with null values.",
   "main": "dist/index.js",
   "type": "module",

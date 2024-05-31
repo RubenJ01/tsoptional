@@ -138,4 +138,16 @@ describe("Optional", () => {
             expect(sut.orElse(testValue)).toBe(testValue);
         });
     });
+
+    describe("orElseGet", () => {
+        it("should return the value if its present", () => {
+            let sut = Optional.of(testValue);
+            expect(sut.orElseGet(() => "test")).toBe(testValue);
+        });
+
+        it("should return the result of other if no value is present", () => {
+            let sut = Optional.empty();
+            expect(sut.orElseGet(() => testValue)).toBe(testValue);
+        });
+    });
 });

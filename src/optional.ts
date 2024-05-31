@@ -1,6 +1,7 @@
 import Consumer from "./consumer";
 import Predicate from "./predicate";
 import Runnable from "./runnable";
+import Supplier from "./supplier";
 
 /**
  * Container object which may or may not contain a non-null value.
@@ -67,6 +68,14 @@ export default abstract class Optional<T> {
      */
     abstract orElse(other: T): T;
 
+
+    /**
+     * Returns the value if its present, otherwise calls other and returns the result of that function call.
+     * @param other The supplier to call if no value is present.
+     * @returns Value or result of supplier.
+     */
+    abstract orElseGet(other: Supplier<T>) : T;
+
     /**
      * Checks if the Optional is not empty.
      * @returns True if there is a value present, otherwise false.
@@ -111,6 +120,10 @@ class EmptyOptional<T> extends Optional<T> {
         return other;
     }
 
+    orElseGet(other: Supplier<T>): T {
+        return other();
+    }
+
     isPresent(): boolean {
         return false;
     }
@@ -146,6 +159,10 @@ class PresentOptional<T> extends Optional<T> {
     }
 
     orElse(other: T): T {
+        return this.value;
+    }
+
+    orElseGet(other: Supplier<T>): T {
         return this.value;
     }
 
