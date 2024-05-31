@@ -1,5 +1,7 @@
 import Consumer from "./consumer";
+import Predicate from "./predicate";
 import Runnable from "./runnable";
+import Supplier from "./supplier";
 /**
  * Container object which may or may not contain a non-null value.
  */
@@ -40,8 +42,33 @@ export default abstract class Optional<T> {
      */
     abstract ifPresent(action: Consumer<T>): void;
     /**
+     * Returns the value if its present, otherwise other.
+     * @param other The value to return if no value is present.
+     * @returns Value or other.
+     */
+    abstract orElse(other: T): T;
+    /**
+     * Returns the value if its present, otherwise calls other and returns the result of that function call.
+     * @param other The supplier to call if no value is present.
+     * @returns Value or result of supplier.
+     */
+    abstract orElseGet(other: Supplier<T>): T;
+    /**
+     * Checks if the Optional is not empty.
      * @returns True if there is a value present, otherwise false.
      */
     abstract isPresent(): boolean;
+    /**
+     * Returns the value as an Optional if it matches the given predicate, EmptyOptional otherwise.
+     * @param predicate The predicate you want to compare the given value against.
+     * @throws Error if the predicate is null.
+     */
+    abstract filter(predicate: Predicate<T>): Optional<T>;
+    /**
+     * Compares the Optional to another one.
+     * @param optional The Optional you want it to compare to.
+     * @returns True if the two Optionals contain the same value, false if otherwise.
+     */
+    abstract equals<T>(optional: Optional<T>): boolean;
 }
 //# sourceMappingURL=optional.d.ts.map

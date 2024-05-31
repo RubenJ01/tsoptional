@@ -46,8 +46,20 @@ class EmptyOptional extends Optional {
     ifPresent(action) {
         return;
     }
+    orElse(other) {
+        return other;
+    }
+    orElseGet(other) {
+        return other();
+    }
     isPresent() {
         return false;
+    }
+    filter(predicate) {
+        return new EmptyOptional();
+    }
+    equals(optional) {
+        return !optional.isPresent();
     }
 }
 class PresentOptional extends Optional {
@@ -64,8 +76,26 @@ class PresentOptional extends Optional {
     ifPresent(action) {
         action(this.value);
     }
+    orElse(other) {
+        return this.value;
+    }
+    orElseGet(other) {
+        return this.value;
+    }
     isPresent() {
         return true;
+    }
+    filter(predicate) {
+        if (predicate(this.value)) {
+            return this;
+        }
+        return new EmptyOptional();
+    }
+    equals(optional) {
+        if (!optional.isPresent() || !optional.isPresent() || !(typeof this.value === typeof optional.get())) {
+            return false;
+        }
+        return this.value == optional.get();
     }
 }
 //# sourceMappingURL=optional.js.map
