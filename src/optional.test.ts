@@ -2,13 +2,15 @@ import Optional from "./optional";
 
 describe("Optional", () => {
 
-    const value = "test";
+    const testValue = "test";
+
     const consumer = jest.fn();
     const runnable = jest.fn();
+    const predicate = jest.fn();
 
     describe("of", () => {
         it("should return an Optional with the given value", () => {
-            const sut = Optional.of(value);
+            const sut = Optional.of(testValue);
             expect(sut.isPresent()).toBe(true);
         });
 
@@ -23,7 +25,7 @@ describe("Optional", () => {
 
     describe("ofNullable", () => {
         it("should return an Optional with the given value", () => {
-            const sut = Optional.ofNullable(value);
+            const sut = Optional.ofNullable(testValue);
             expect(sut.isPresent()).toBe(true);
         });
 
@@ -47,8 +49,8 @@ describe("Optional", () => {
 
     describe("get", () => {
         it("should return the value stored inside the Optional if its not null or undefined", () => {
-            const sut = Optional.of(value);
-            expect(sut.get()).toEqual(value);
+            const sut = Optional.of(testValue);
+            expect(sut.get()).toEqual(testValue);
         });
 
         it("should throw an error if the Optional is empty", () => {
@@ -59,7 +61,7 @@ describe("Optional", () => {
 
     describe("ifPresent", () => {
         it("should execute the given consumer if a value is present", () => {
-            const sut = Optional.of(value);
+            const sut = Optional.of(testValue);
             sut.ifPresent((value) => consumer());
             expect(consumer).toHaveBeenCalled();
         });
@@ -73,7 +75,7 @@ describe("Optional", () => {
 
     describe("ifPresentOrElse", () => {
         it("should execute the given consumer if a value is present", () => {
-            const sut = Optional.of(value);
+            const sut = Optional.of(testValue);
             sut.ifPresentOrElse((value) => consumer(), () => runnable());
             expect(consumer).toHaveBeenCalled();
             expect(runnable).toHaveBeenCalledTimes(0);
@@ -87,5 +89,41 @@ describe("Optional", () => {
         });
     });
 
+    describe("filter", () => {
+        it("should return the value as an Optional if its present and matches the predicate", () => {
+            let sut = Optional.of(testValue);
+            let filteredValue = sut.filter((value) => value == testValue).get();
+            expect(filteredValue).toEqual(testValue);
+        });
 
+        it("should not call the predicate if the Optional is empty", () => {
+            let sut = Optional.empty();
+            sut.filter(predicate);
+            expect(predicate).toHaveBeenCalledTimes(0);
+        });
+
+        it("should return an empty Optional if the predicate returns false", () => {
+            let sut = Optional.of(testValue);
+            let filteredValue = sut.filter(() => false);
+            expect(filteredValue.isPresent()).toBe(false);
+        })
+    });
+
+    describe("equals", () => {
+        it("should return true when its comparing two Optionals with the same value", () => {
+            let sut = Optional.of(testValue);
+            expect(sut.equals(Optional.of(testValue))).toBe(true);
+            sut = Optional.empty();
+            expect(sut.equals(Optional.empty())).toBe(true);
+        });
+
+        it("should return false when its comparing two Optionals with different values", () => {
+            let sut = Optional.of(testValue);
+            expect(sut.equals(Optional.of(testValue + testValue))).toBe(false);
+            expect(sut.equals(Optional.empty())).toBe(false);
+            expect(sut.equals(Optional.of(5))).toBe(false);
+            sut = Optional.of("5");
+            expect(sut.equals(Optional.of(5))).toBe(false);
+        });
+    });
 });

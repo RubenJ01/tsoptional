@@ -1,4 +1,5 @@
 import Consumer from "./consumer";
+import Predicate from "./predicate";
 import Runnable from "./runnable";
 
 /**
@@ -60,9 +61,25 @@ export default abstract class Optional<T> {
     abstract ifPresent(action: Consumer<T>): void;
 
     /**
+     * Checks if the Optional is not empty.
      * @returns True if there is a value present, otherwise false.
      */
     abstract isPresent(): boolean;
+
+    /**
+     * Returns the value as an Optional if it matches the given predicate, EmptyOptional otherwise.
+     * @param predicate The predicate you want to compare the given value against.
+     * @throws Error if the predicate is null.
+     */
+    abstract filter(predicate: Predicate<T>): Optional<T>;
+
+    /**
+     * Compares the Optional to another one.
+     * @param optional The Optional you want it to compare to.
+     * @returns True if the two Optionals contain the same value, false if otherwise.
+     */
+    abstract equals<T>(optional: Optional<T>): boolean;
+    
 }
 
 class EmptyOptional<T> extends Optional<T> {
@@ -85,6 +102,14 @@ class EmptyOptional<T> extends Optional<T> {
 
     isPresent(): boolean {
         return false;
+    }
+
+    filter(predicate: Predicate<T>): Optional<T> {
+        return new EmptyOptional();
+    }
+
+    equals<T>(optional: Optional<T>): boolean {
+        return !optional.isPresent();
     }
 }
 
@@ -111,5 +136,19 @@ class PresentOptional<T> extends Optional<T> {
 
     isPresent(): boolean {
         return true;
+    }
+
+    filter(predicate: Predicate<T>): Optional<T> {
+        if(predicate(this.value)) {
+            return this;
+        }
+        return new EmptyOptional();
+    }
+
+    equals<T>(optional: Optional<T>): boolean {
+        if(!optional.isPresent() || !optional.isPresent() || !(typeof this.value === typeof optional.get())) {
+            return false;
+        }
+        return (this.value as unknown as T) == (optional.get() as T);
     }
 }
